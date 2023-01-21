@@ -1,0 +1,10 @@
+---
+packages_web:
+  - apache2
+  - openssl
+  - certbot
+  - python3-certbot-apache
+
+
+website_url: "awx.souhaiebtarhouni.xyz"
+email_for_url: "tarhounisouhaieb@gmail.com"

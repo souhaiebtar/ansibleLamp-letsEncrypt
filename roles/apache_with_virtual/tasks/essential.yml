@@ -1,0 +1,5 @@
+---
+- name: Install web and let's encrypt related packages
+  package:
+    name: "{{ packages_web }}"
+    state: latest

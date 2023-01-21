@@ -1,0 +1,10 @@
+---
+- hosts: all
+  become: yes
+
+
+  roles:
+    - role: system
+    - role: apache_with_virtual
+    # - role: geerlingguy.pip
+    # - role: geerlingguy.docker

@@ -1,0 +1,14 @@
+username: tunknown
+packages:
+  - vim
+  - tmux
+  - htop
+  - neofetch
+  - speedtest-cli
+
+shell: /bin/bash
+
+pip_install_packages:
+  - name: docker
+
+docker_apt_gpg_key: "https://download.docker.com/linux/ubuntu/gpg"

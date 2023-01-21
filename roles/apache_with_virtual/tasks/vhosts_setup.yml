@@ -1,0 +1,59 @@
+---
+- name: create a folder for {{ website_url }}
+  file:
+    path: "/var/www/{{ website_url }}"
+    mode: 0755
+    state: directory
+    owner: "{{ username }}"
+    group: "{{ username }}"
+
+- name: create the file index.html in {{ website_url }}
+  copy:
+    dest: "/var/www/{{ website_url }}/index.html"
+    mode: 0755
+    owner: "{{ username }}"
+    group: "{{ username }}"
+    content: |
+      <html>   
+        <head>
+        <title>Welcome to Your_domain!</title>
+        </head>
+        <body>
+          <h1>Success!  The your_domain virtual host is working!</h1>
+        </body>
+      </html>
+
+
+- name: create vhost file for {{ website_url }}
+  copy:
+    dest: "/etc/apache2/sites-available/{{ website_url }}.conf"
+    content: |
+      <VirtualHost *:80>
+          ServerAdmin webmaster@localhost
+          ServerName {{ website_url }}
+          ServerAlias {{ website_url }}
+          DocumentRoot /var/www/{{ website_url }}
+          ErrorLog ${APACHE_LOG_DIR}/error.log
+          CustomLog ${APACHE_LOG_DIR}/access.log combined
+      </VirtualHost>
+
+- name: Enable  site {{ website_url }}
+  command: a2ensite {{ website_url }}
+
+- name: disable new site
+  shell: /usr/sbin/a2dissite 000-default.conf
+
+- name: enable apache modules
+  command: a2enmod {{ item }}
+  loop:
+    - ssl
+    - rewrite
+
+- name: generate let's encrypt certificate for {{ website_url }}
+  command: certbot --apache -d  {{ website_url }} -m {{ email_for_url }} --agree-tos --noninteractive --redirect
+
+
+- name: Restart SSH daemon
+  service:
+    name: apache2
+    state: restarted
